@@ -46,6 +46,7 @@
     "poweredUrl": "https://www.dripfunnel.com/in/",
     "poweredLogo": "DripFunnel",
     "whatsapp": "Chat with us on WhatsApp",
+    "backToTop": "Back to top",
     "chat": "Chat with us",
     "addressPart": "{part},",
     "phone": "+{code} {number}"

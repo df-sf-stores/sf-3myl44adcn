@@ -3,6 +3,7 @@ import { ConsentBanner, PreviewBanner, useStorefront } from '@dripfunnel/storefr
 import { Header } from './interactive/Header'
 import { WishlistProvider } from './interactive/Wishlist'
 import { Footer, WhatsAppButton } from './Footer'
+import { BackToTop } from './interactive/BackToTop'
 import { BadgeCheck, Basket, Truck } from './Icons'
 import base from '../styles/base.module.css'
 import layout from '../styles/layout.module.css'
@@ -41,13 +42,14 @@ export const Layout = ({ children, bare = false }: { children: ReactNode; bare?:
   const { t, mode } = useStorefront()
   return (
     <WishlistProvider>
-    <div className={base.root}>
+    <div id="top" className={base.root}>
       {mode === 'live' ? null : <PreviewBanner t={t} className={layout.preview} />}
       {bare ? null : <Announcement />}
       {bare ? null : <Header />}
       <main className="flex-1">{children}</main>
       {bare ? null : <Footer />}
       <WhatsAppButton />
+      <BackToTop />
       <ConsentBanner t={t} className={layout.consent} />
     </div>
     </WishlistProvider>
