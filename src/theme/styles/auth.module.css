@@ -1,0 +1,73 @@
+/* Sign in and register: core's fields as the reference's card inputs. */
+.form {
+  display: block;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  color: var(--color-ink);
+  font-size: 14px;
+}
+
+.field label {
+  font-weight: 500;
+  line-height: 1;
+}
+
+.field input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 36px;
+  padding: 4px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 14px;
+}
+
+.field input:focus-visible {
+  border-color: #90a1b9;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(144, 161, 185, 0.5);
+}
+
+.field [aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.field p,
+.field small {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 12px;
+}
+
+.submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 36px;
+  border: 0;
+  border-radius: 6px;
+  background: #0f172b;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition-property: background-color, opacity;
+  transition-duration: 150ms;
+}
+
+.submit:hover {
+  background: #1d293d;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+}

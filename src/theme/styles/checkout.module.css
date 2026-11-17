@@ -1,0 +1,165 @@
+/* Checkout's forms, built from core's fields, in the reference's shadcn-style inputs. */
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  color: var(--color-ink);
+  font-size: 14px;
+}
+
+.field label {
+  font-weight: 500;
+}
+
+.field input,
+.field select,
+.phone select,
+.phone input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 14px;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.phone select:focus-visible,
+.phone input:focus-visible {
+  border-color: #90a1b9;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(144, 161, 185, 0.5);
+}
+
+.field [aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.field p,
+.field small {
+  margin: 0;
+  color: #62748e;
+  font-size: 12px;
+}
+
+.phone {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.address {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .address {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.choices {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choices legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.choice input {
+  accent-color: var(--color-brand);
+}
+
+.chosen {
+  border-color: var(--color-brand);
+  background: var(--color-brand-tint);
+}
+
+.primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  border: 0;
+  border-radius: 6px;
+  background: #0f172b;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition-property: background-color, opacity;
+  transition-duration: 150ms;
+}
+
+.primary:hover {
+  background: #1d293d;
+}
+
+.primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.payment {
+  display: block;
+}
+
+.summary {
+  display: block;
+  --df-sealed-color: var(--color-ink);
+  --df-sealed-muted: #62748e;
+  --df-sealed-size: 14px;
+  --df-sealed-line: #e2e8f0;
+}
+
+/* Each step numbers itself, in the stepper and on its card. */
+.steps {
+  counter-reset: step;
+}
+
+.stepNumber::before {
+  counter-increment: step;
+  content: counter(step);
+}
+
+.cards {
+  counter-reset: card;
+}
+
+.cardNumber::before {
+  counter-increment: card;
+  content: counter(card);
+}

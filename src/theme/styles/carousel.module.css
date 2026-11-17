@@ -1,0 +1,141 @@
+/* The related products' track: 48% a card on phones, then thirds and quarters. */
+.trackRelated {
+  --step: 48%;
+  transition-property: transform;
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@media (min-width: 640px) {
+  .trackRelated {
+    --step: calc(100% / 3);
+  }
+}
+
+@media (min-width: 1024px) {
+  .trackRelated {
+    --step: 25%;
+  }
+}
+
+/* The home catalog carousel's track: each position moves it one card's width (100% / cards a view). */
+.track {
+  --step: 50%;
+  transition-property: transform;
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@media (min-width: 640px) {
+  .track {
+    --step: calc(100% / 3);
+  }
+}
+
+@media (min-width: 1024px) {
+  .track {
+    --step: 25%;
+  }
+}
+
+@media (min-width: 1536px) {
+  .track {
+    --step: 20%;
+  }
+}
+
+.at0 {
+  transform: translateX(calc(var(--step) * 0));
+}
+
+.at1 {
+  transform: translateX(calc(var(--step) * -1));
+}
+
+.at2 {
+  transform: translateX(calc(var(--step) * -2));
+}
+
+.at3 {
+  transform: translateX(calc(var(--step) * -3));
+}
+
+.at4 {
+  transform: translateX(calc(var(--step) * -4));
+}
+
+.at5 {
+  transform: translateX(calc(var(--step) * -5));
+}
+
+.at6 {
+  transform: translateX(calc(var(--step) * -6));
+}
+
+.at7 {
+  transform: translateX(calc(var(--step) * -7));
+}
+
+.at8 {
+  transform: translateX(calc(var(--step) * -8));
+}
+
+.at9 {
+  transform: translateX(calc(var(--step) * -9));
+}
+
+.at10 {
+  transform: translateX(calc(var(--step) * -10));
+}
+
+.at11 {
+  transform: translateX(calc(var(--step) * -11));
+}
+
+.at12 {
+  transform: translateX(calc(var(--step) * -12));
+}
+
+.at13 {
+  transform: translateX(calc(var(--step) * -13));
+}
+
+.at14 {
+  transform: translateX(calc(var(--step) * -14));
+}
+
+.at15 {
+  transform: translateX(calc(var(--step) * -15));
+}
+
+.at16 {
+  transform: translateX(calc(var(--step) * -16));
+}
+
+.at17 {
+  transform: translateX(calc(var(--step) * -17));
+}
+
+.at18 {
+  transform: translateX(calc(var(--step) * -18));
+}
+
+.at19 {
+  transform: translateX(calc(var(--step) * -19));
+}
+
+.at20 {
+  transform: translateX(calc(var(--step) * -20));
+}
+
+.at21 {
+  transform: translateX(calc(var(--step) * -21));
+}
+
+.at22 {
+  transform: translateX(calc(var(--step) * -22));
+}
+
+.at23 {
+  transform: translateX(calc(var(--step) * -23));
+}

@@ -1,0 +1,158 @@
+/* Core's sealed price inside the cards, set as the reference sets its prices. */
+.catalogPrice {
+  --df-price-size: 14px;
+  --df-sealed-color: var(--color-brand-dark);
+  --df-sealed-muted: var(--color-ink-muted);
+  --df-sealed-size: 9px;
+  display: block;
+  min-width: 0;
+}
+
+.catalogPrice::part(amount) {
+  color: var(--color-brand-dark);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+.catalogPrice::part(tax) {
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.gridPrice {
+  --df-price-size: 16px;
+  --df-sealed-color: var(--color-ink);
+  --df-sealed-muted: var(--color-ink-muted);
+  display: block;
+  min-width: 0;
+}
+
+.gridPrice::part(amount) {
+  color: var(--color-ink);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+.gridPrice::part(tax) {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+@media (min-width: 640px) {
+  .catalogPrice {
+    --df-price-size: 16px;
+  }
+
+  .gridPrice {
+    --df-price-size: 18px;
+  }
+}
+
+.listingPrice {
+  --df-price-size: 15px;
+  --df-sealed-color: var(--color-brand);
+  --df-sealed-muted: var(--color-ink-muted);
+  display: block;
+}
+
+.listingPrice::part(amount) {
+  color: var(--color-brand);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.listingPrice::part(tax) {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.searchPrice {
+  --df-price-size: 18px;
+  --df-sealed-color: var(--color-brand);
+  --df-sealed-muted: var(--color-ink-muted);
+  display: block;
+  line-height: 1;
+}
+
+.searchPrice::part(amount) {
+  color: var(--color-brand);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.searchPrice::part(tax) {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.barPrice {
+  --df-price-size: 18px;
+  --df-sealed-color: var(--color-brand);
+  --df-sealed-muted: var(--color-ink-muted);
+  display: block;
+  line-height: 1.25;
+}
+
+.barPrice::part(amount) {
+  color: var(--color-brand);
+  font-weight: 900;
+}
+
+.barPrice::part(tax) {
+  font-size: 10px;
+}
+
+.productPrice {
+  --df-price-size: 30px;
+  --df-sealed-color: var(--color-brand);
+  --df-sealed-muted: var(--color-ink-muted);
+  display: block;
+  line-height: 1;
+}
+
+.productPrice::part(amount) {
+  color: var(--color-brand);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+.productPrice::part(tax) {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+@media (min-width: 640px) {
+  .productPrice {
+    --df-price-size: 34px;
+  }
+}
+
+.lineTotal {
+  --df-price-size: 18px;
+  --df-sealed-color: var(--color-ink);
+  --df-sealed-muted: #62748e;
+  display: block;
+}
+
+.lineTotal::part(amount) {
+  font-weight: 600;
+}
+
+.lineTotal::part(tax) {
+  font-size: 11px;
+}
+
+.unitPrice {
+  --df-price-size: 14px;
+  --df-sealed-color: #62748e;
+  --df-sealed-muted: #62748e;
+  display: inline;
+}
+
+.unitPrice::part(amount) {
+  font-weight: 400;
+}
+
+.unitPrice::part(tax) {
+  font-size: 11px;
+}

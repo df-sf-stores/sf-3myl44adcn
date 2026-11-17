@@ -1,72 +1,135 @@
 'use client'
 
-import { useId, useState } from 'react'
-import { AddToCart, BuyNow, Link, TextField, useStorefront, type GiftRecipient, type ProductPage } from '@dripfunnel/storefront-core/theme'
-import shop from '../../styles/shop.module.css'
-import styles from '../../styles/product.module.css'
+import { useRef, useState } from 'react'
+import { AddToCart, BuyNow, Link, Price, useInView, useStorefront, type ProductPage } from '@dripfunnel/storefront-core/theme'
+import { Cart, Minus, Plus, Zap } from '../Icons'
+import card from '../../styles/card.module.css'
 
-const emailLike = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-/**
- * Add to cart and Buy now for the chosen version; both wait until every option is chosen and the version is in stock.
- * A gift card asks for its recipient first, as D1's gift card page does; a download or a service says what the shopper gets.
- */
-export const BuyButtons = ({ page }: { page: ProductPage }) => {
+/** Each option's values as pills; a value sold out with the other choices stays choosable but fades. */
+const Options = ({ page }: { page: ProductPage }) => {
   const { t } = useStorefront()
-  const [note, setNote] = useState<'added' | 'failed' | null>(null)
-  const [gift, setGift] = useState<GiftRecipient>({ recipientName: '', recipientEmail: '', sendOn: '', message: '' })
-  const version = page.version
-  const kind = page.product?.kind
-  const isGift = kind?.kind === 'gift_card'
-  const giftReady = gift.recipientName.trim() !== '' && emailLike.test(gift.recipientEmail.trim())
-  const buyable = version !== null && version.stock.inStock && (!isGift || giftReady)
-  const set = (patch: Partial<GiftRecipient>) => setGift({ ...gift, ...patch })
-  const why = useId()
-  const waitsForRecipient = isGift && !giftReady
+  if (!page.options.length) return null
   return (
-    <div className={styles.buy}>
-      {kind?.kind === 'digital' ? (
-        <p className={styles.kindNote}>{kind.downloadLimit !== null && kind.downloadDays !== null ? t('shop.product.download', { times: kind.downloadLimit, days: kind.downloadDays }) : t('shop.product.downloadPlain')}</p>
-      ) : null}
-      {kind?.kind === 'service' ? <p className={styles.kindNote}>{[kind.duration, kind.location].filter(Boolean).join(' · ') || t('shop.product.service')}</p> : null}
-      {kind?.kind === 'gift_card' ? (
-        <div className={styles.gift}>
-          <TextField label={t('shop.product.gift.name')} autoComplete="off" value={gift.recipientName} onChange={(recipientName) => set({ recipientName })} className={styles.field} />
-          <TextField label={t('shop.product.gift.email')} type="email" autoComplete="off" value={gift.recipientEmail} onChange={(recipientEmail) => set({ recipientEmail })} className={styles.field} />
-          <TextField label={t('shop.product.gift.message')} note={t('shop.product.gift.optional')} maxLength={200} value={gift.message ?? ''} onChange={(message) => set({ message })} className={styles.field} />
-          <TextField
-            label={t('shop.product.gift.sendOn')}
-            type="date"
-            value={gift.sendOn ?? ''}
-            onChange={(sendOn) => set({ sendOn })}
-            hint={kind.expiryMonths !== null ? t('shop.product.gift.sendHintExpiry', { months: kind.expiryMonths }) : t('shop.product.gift.sendHint')}
-            className={styles.field}
-          />
+    <div className="space-y-3">
+      {page.options.map((option) => (
+        <div key={option.id} role="group" aria-label={option.name}>
+          <p className="mt-0 mb-2 text-sm font-bold text-ink">{option.name}</p>
+          <div className="flex flex-wrap gap-2">
+            {option.values.map((value) => (
+              <button
+                key={value.id}
+                type="button"
+                aria-pressed={value.selected}
+                aria-label={value.available ? value.name : t('shop.product.unavailable', { value: value.name })}
+                onClick={() => page.choose(option.id, value.id)}
+                className={`h-10 rounded-full border-2 px-4 text-sm font-semibold transition-colors ${value.selected ? 'border-brand bg-brand-tint text-brand-dark' : 'border-line bg-white text-ink hover:border-brand/50'} ${value.available ? '' : 'opacity-45'}`}
+              >
+                {value.name}
+              </button>
+            ))}
+          </div>
         </div>
-      ) : null}
-      {waitsForRecipient ? (
-        <p id={why} className={styles.kindNote}>
-          {t('shop.product.gift.needed')}
-        </p>
-      ) : null}
-      <AddToCart versionId={version?.id ?? null} disabled={!buyable} gift={isGift ? gift : null} describedBy={waitsForRecipient ? why : undefined} className={shop.primary} onDone={(added) => setNote(added ? 'added' : 'failed')}>
-        {isGift ? t('shop.product.gift.add') : t('shop.product.add')}
-      </AddToCart>
-      {isGift ? null : (
-        <BuyNow versionId={version?.id ?? null} disabled={!buyable} className={shop.secondary} onDone={(bought) => setNote(bought ? null : 'failed')}>
-          {t('shop.product.buyNow')}
-        </BuyNow>
-      )}
-      {note ? (
-        <p className={styles.added} role="status">
-          {note === 'added' ? t('shop.product.added') : t('shop.product.addFailed')}{' '}
-          {note === 'added' ? (
-            <Link href="/cart/" className={styles.viewCart}>
-              {t('shop.product.viewCart')}
-            </Link>
-          ) : null}
-        </p>
-      ) : null}
+      ))}
     </div>
+  )
+}
+
+/** Quantity, Add to Cart and Buy Now for the chosen version; below 1024px a bar with Add to Cart follows once they scroll away. */
+export const BuyButtons = ({ page }: { page: ProductPage }) => {
+  const { store, locale, t } = useStorefront()
+  const [quantity, setQuantity] = useState(1)
+  const [note, setNote] = useState<'added' | 'failed' | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref)
+  const version = page.version
+  const buyable = version !== null && version.stock.inStock
+  const most = version?.stock.available ?? 99
+  const name = page.product?.name ?? ''
+  return (
+    <>
+      <Options page={page} />
+      <div ref={ref} className="mt-6 space-y-3">
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-bold text-ink">{t('site.product.quantity')}</span>
+          <div className="inline-flex h-11 items-center rounded-full border-2 border-line bg-white" role="group" aria-label={t('site.product.quantity')}>
+            <button
+              type="button"
+              aria-label={t('site.product.decrease')}
+              disabled={quantity <= 1}
+              onClick={() => setQuantity(quantity - 1)}
+              className="flex size-10 items-center justify-center rounded-full border-0 bg-transparent p-0 text-ink transition-colors hover:text-brand disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:text-ink"
+            >
+              <Minus className="size-4" />
+            </button>
+            <span className="w-9 text-center text-base font-bold text-ink tabular-nums" role="status">
+              {quantity}
+            </span>
+            <button
+              type="button"
+              aria-label={t('site.product.increase')}
+              disabled={quantity >= most}
+              onClick={() => setQuantity(quantity + 1)}
+              className="flex size-10 items-center justify-center rounded-full border-0 bg-transparent p-0 text-ink transition-colors hover:text-brand disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:text-ink"
+            >
+              <Plus className="size-4" />
+            </button>
+          </div>
+        </div>
+        <div className="grid gap-2.5 sm:grid-cols-2">
+          <AddToCart
+            versionId={version?.id ?? null}
+            quantity={quantity}
+            disabled={!buyable}
+            onDone={(added) => setNote(added ? 'added' : 'failed')}
+            className="inline-flex h-13 items-center justify-center gap-2 rounded-full border-0 bg-brand px-6 text-base font-bold text-white shadow-[0_12px_24px_-12px_rgba(226,77,34,0.7)] transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+          >
+            <Cart className="size-5" />
+            {t('site.card.add')}
+          </AddToCart>
+          <BuyNow
+            versionId={version?.id ?? null}
+            quantity={quantity}
+            disabled={!buyable}
+            onDone={(bought) => setNote(bought ? null : 'failed')}
+            className="inline-flex h-13 items-center justify-center gap-2 rounded-full border-2 border-charcoal bg-charcoal px-6 text-base font-bold text-white transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-charcoal-dark focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+          >
+            <Zap className="size-5" />
+            {t('site.card.buy')}
+          </BuyNow>
+        </div>
+        {page.missing[0] ? <p className="my-0 text-sm text-ink-muted">{t('shop.product.choose', { option: page.missing[0].name })}</p> : null}
+        {note ? (
+          <p className="my-0 text-sm font-semibold text-ink" role="status">
+            {note === 'added' ? t('shop.product.added') : t('shop.product.addFailed')}{' '}
+            {note === 'added' ? (
+              <Link href="/cart/" className="text-brand underline">
+                {t('shop.product.viewCart')}
+              </Link>
+            ) : null}
+          </p>
+        ) : null}
+      </div>
+      <div
+        aria-hidden={inView}
+        className={`fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/97 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-12px_rgba(44,47,48,0.25)] backdrop-blur transition-transform motion-reduce:transition-none lg:hidden ${inView ? 'translate-y-full' : 'translate-y-0'}`}
+      >
+        <div className="mx-auto flex max-w-xl items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="my-0 truncate text-xs font-semibold text-ink-muted">{name}</p>
+            {page.price ? <Price money={page.price} compareAt={null} includesTax={store.pricesIncludeTax} locale={locale} t={t} className={card.barPrice} /> : null}
+          </div>
+          <AddToCart
+            versionId={version?.id ?? null}
+            quantity={quantity}
+            disabled={!buyable}
+            onDone={(added) => setNote(added ? 'added' : 'failed')}
+            className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full border-0 bg-brand px-5 text-sm font-bold text-white transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:bg-ink/15 disabled:text-ink-muted"
+          >
+            <Cart className="size-5" />
+            {t('site.card.add')}
+          </AddToCart>
+        </div>
+      </div>
+    </>
   )
 }

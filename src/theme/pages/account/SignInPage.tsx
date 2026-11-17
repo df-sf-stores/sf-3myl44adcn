@@ -1,17 +1,15 @@
-import { Link, useStorefront } from '@dripfunnel/storefront-core/theme'
+import { useStorefront } from '@dripfunnel/storefront-core/theme'
+import { AuthLayout } from '../../components/AuthLayout'
 import { Layout } from '../../components/Layout'
-import { PageIntro } from '../../components/PageIntro'
-import styles from '../../styles/page.module.css'
+import { SignInForm } from '../../components/interactive/AuthForms'
 
 export const SignInPage = () => {
   const { t } = useStorefront()
   return (
-    <Layout>
-      <PageIntro title={t('pages.signIn.title')} lead={t('pages.signIn.lead')}>
-        <Link href="/register/" className={styles.action}>
-          {t('pages.signIn.action')}
-        </Link>
-      </PageIntro>
+    <Layout bare>
+      <AuthLayout lead={t('site.auth.welcomeBack')} title={t('site.auth.signIn')} subtitle={t('site.auth.enterCredentials')}>
+        <SignInForm />
+      </AuthLayout>
     </Layout>
   )
 }

@@ -1,0 +1,61 @@
+@theme static {
+  /* The reference's own tokens (omsaimaalikh.in compiled CSS). */
+  --color-brand: #f4511e;
+  --color-brand-2: #f7703f;
+  --color-brand-dark: #d8400f;
+  --color-brand-soft: #ffe1d2;
+  --color-brand-tint: #fff0e8;
+  --color-promo: #f4511e;
+  --color-ink: #252525;
+  --color-ink-muted: #666;
+  --color-charcoal: #333;
+  --color-charcoal-dark: #252525;
+  --color-cream: #fff7ec;
+  --color-cream-light: #fffbf5;
+  --color-leaf: #5b9a3c;
+  --color-line: #e8e8e8;
+  --color-muted: #f1f5f9;
+  --color-whatsapp: #25d366;
+  --color-danger: #e40014;
+
+  /* Geist and Kaushan Script aren't in core's font list: Inter and Playfair Display (italic) stand in. */
+  --font-sans: 'Inter', sans-serif;
+  --font-script: 'Playfair Display', serif;
+
+  --radius: 0.625rem;
+
+  /* The reference's transitions run 200–300ms; one default for every transition-* class. */
+  --default-transition-duration: 300ms;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}

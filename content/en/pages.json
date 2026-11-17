@@ -53,7 +53,8 @@
     "title": "Your account",
     "lead": "Your orders and addresses in one place.",
     "orders": "Your orders",
-    "addresses": "Your addresses"
+    "addresses": "Your addresses",
+    "wishlist": "Your wishlist"
   },
   "addresses": {
     "title": "Your addresses",
@@ -91,5 +92,9 @@
     "email": "Email",
     "phone": "Phone",
     "visit": "Visit"
+  },
+  "wishlist": {
+    "title": "Your wishlist",
+    "lead": "Products you've saved for later."
   }
 }

@@ -1,0 +1,87 @@
+/*
+ * The page root. Core ships no Tailwind preflight, and a module rule outranks every utility (utilities sit in a cascade
+ * layer), so this keeps only what no utility sets; margins, paddings and colours are written as classes on each element.
+ */
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* Nothing may push the page wider than the window: no white strip at the right edge or scrollbar under the footer. clip, not hidden, so the sticky header still sticks. */
+  overflow-x: clip;
+  background: #fff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  /* Inter sets about 4% wider than the reference's Geist; this brings lines to the same measure. */
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+}
+
+.root div,
+.root span,
+.root section,
+.root article,
+.root header,
+.root footer,
+.root main,
+.root nav,
+.root ul,
+.root ol,
+.root li,
+.root p,
+.root h1,
+.root h2,
+.root h3,
+.root a,
+.root button,
+.root img,
+.root svg {
+  box-sizing: border-box;
+}
+
+.root button {
+  font-family: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+.root button:disabled {
+  cursor: default;
+}
+
+.root summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+/* The reference's script face (Kaushan Script there): its words read as a handwritten accent. */
+.script {
+  font-family: var(--font-script);
+  font-style: italic;
+  font-weight: 700;
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scroll reveal: in view, sections rise and fade in; never under reduced motion. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}

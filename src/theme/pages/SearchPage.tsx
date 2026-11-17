@@ -1,34 +1,36 @@
-import { Link, SearchField, useCollections, useSearch, useStorefront } from '@dripfunnel/storefront-core/theme'
+import { Link, useListing, useSearch, useStorefront } from '@dripfunnel/storefront-core/theme'
 import { Layout } from '../components/Layout'
-import { ListingResults } from '../components/ListingResults'
-import { Notice } from '../components/Notice'
-import styles from '../styles/shop.module.css'
+import { SearchResults } from '../components/ListingResults'
+import { useCategoryNames } from '../components/catalog'
+import { ChevronRight } from '../components/Icons'
 
+/** Shop All (no words: every product) and search results, in the reference's catalog layout. */
 export const SearchPage = () => {
   const { t } = useStorefront()
   const search = useSearch()
-  const { collections } = useCollections({ first: 6 })
-  const none = search.status === 'ready' && search.items.length === 0 && search.selected.length === 0
+  const all = useListing({}, search.query === '')
+  const { nameOf } = useCategoryNames()
+  const listing = search.query ? search : all
   return (
     <Layout>
-      <section className={styles.page}>
-        <header className={styles.intro}>
-          <h1 className={styles.title}>{search.query ? t('shop.search.results', { query: search.query }) : t('shop.search.title')}</h1>
-          {search.query ? null : <p className={styles.lead}>{t('shop.search.lead')}</p>}
-        </header>
-        <SearchField label={t('shop.search.label')} placeholder={t('shop.search.placeholder')} button={t('shop.search.button')} value={search.query} onSearch={search.setQuery} className={styles.search} />
-        {none ? (
-          <Notice title={t('shop.search.none', { query: search.query })} lead={t('shop.search.noneLead')}>
-            {collections.map((c) => (
-              <Link key={c.id} href={c.href} className={styles.chipLink}>
-                {c.name}
+      <div className="bg-cream-light">
+        <div className="mx-auto w-full max-w-[1600px] px-4 pt-6 pb-12 lg:px-6 lg:pt-8">
+          <div className="mb-5 lg:mb-6">
+            <nav className="mb-2 flex items-center gap-1 text-xs text-ink-muted" aria-label={t('site.listing.breadcrumb')}>
+              <Link href="/" className="text-inherit no-underline transition-colors hover:text-brand">
+                {t('site.nav.home')}
               </Link>
-            ))}
-          </Notice>
-        ) : search.status === 'idle' ? null : (
-          <ListingResults listing={search} />
-        )}
-      </section>
+              <ChevronRight className="size-3.5" />
+              <span className="font-medium text-ink">{search.query ? t('site.search.title') : t('site.nav.shopAll')}</span>
+            </nav>
+            <h1 className="my-0 text-2xl font-extrabold tracking-tight text-ink sm:text-[28px] lg:text-[32px]">
+              {search.query ? t('site.search.resultsFor', { query: search.query }) : t('site.search.shopAllTitle')}
+            </h1>
+            <p className="mt-1 mb-0 h-5 text-sm text-ink-muted">{listing.status === 'ready' ? t('site.listing.count', { count: listing.items.length }) : ''}</p>
+          </div>
+          <SearchResults listing={listing} nameOf={nameOf} />
+        </div>
+      </div>
     </Layout>
   )
 }

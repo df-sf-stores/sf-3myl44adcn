@@ -1,101 +1,55 @@
 import type { ReactNode } from 'react'
-import { ConsentBanner, ConsentSettingsButton, Link, PoweredBy, PreviewBanner, StoreLogo, useStorefront } from '@dripfunnel/storefront-core/theme'
-import { Menu } from './interactive/Menu'
-import styles from '../styles/layout.module.css'
+import { ConsentBanner, PreviewBanner, useStorefront } from '@dripfunnel/storefront-core/theme'
+import { Header } from './interactive/Header'
+import { WishlistProvider } from './interactive/Wishlist'
+import { Footer, WhatsAppButton } from './Footer'
+import { BadgeCheck, Basket, Truck } from './Icons'
+import base from '../styles/base.module.css'
+import layout from '../styles/layout.module.css'
 
-export const Layout = ({ children }: { children: ReactNode }) => {
-  const { store, t, mode, poweredBy } = useStorefront()
+/** The dark strip above the header: the store's tagline, then two promises. */
+const Announcement = () => {
+  const { store, t } = useStorefront()
   return (
-    <div className={styles.shell}>
-      {mode === 'live' ? null : <PreviewBanner t={t} className={styles.preview} />}
-      <p className={styles.announce}>{t('common.announce')}</p>
-      <header className={styles.header}>
-        <div className={styles.bar}>
-          <Link href="/" className={styles.brand}>
-            <StoreLogo className={styles.logo} />
-          </Link>
-          <Menu label={t('common.nav.menu')}>
-            <nav className={styles.nav} aria-label={t('common.nav.label')}>
-              <Link href="/search/" className={styles.navLink}>
-                {t('common.nav.shop')}
-              </Link>
-              <Link href="/about/" className={styles.navLink}>
-                {t('common.nav.about')}
-              </Link>
-              <Link href="/contact/" className={styles.navLink}>
-                {t('common.nav.contact')}
-              </Link>
-            </nav>
-          </Menu>
-          <div className={styles.tools}>
-            <Link href="/search/" className={styles.tool}>
-              <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <circle cx="11" cy="11" r="6.5" />
-                <path d="M16 16l4.5 4.5" />
-              </svg>
-              <span className={styles.hidden}>{t('common.tools.search')}</span>
-            </Link>
-            <Link href="/account/" className={styles.tool}>
-              <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <circle cx="12" cy="8.5" r="3.8" />
-                <path d="M4.5 20c1.2-3.6 4-5.4 7.5-5.4s6.3 1.8 7.5 5.4" />
-              </svg>
-              <span className={styles.hidden}>{t('common.tools.account')}</span>
-            </Link>
-            <Link href="/cart/" className={styles.tool}>
-              <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M5.5 8h13l-1 12h-11z" />
-                <path d="M9 8V6.5a3 3 0 016 0V8" />
-              </svg>
-              <span className={styles.hidden}>{t('common.tools.cart')}</span>
-            </Link>
-          </div>
+    <div className="bg-charcoal-dark text-[11px] font-medium text-white/90 sm:text-xs">
+      <div className="mx-auto flex h-8 max-w-[1600px] items-center justify-center gap-6 px-4 sm:justify-between lg:px-6">
+        {store.tagline ? (
+          <span className="flex items-center gap-1.5 font-semibold text-white">
+            <Truck className="size-3.5 text-brand-2" />
+            {store.tagline}
+          </span>
+        ) : (
+          <span />
+        )}
+        <div className="hidden items-center gap-4 sm:flex">
+          <span className="flex items-center gap-1.5">
+            <BadgeCheck className="size-3.5 text-brand-2" />
+            {t('site.announce.quality')}
+          </span>
+          <span className="size-1 rounded-full bg-promo" aria-hidden="true" />
+          <span className="flex items-center gap-1.5">
+            <Basket className="size-3.5 text-brand-2" />
+            {t('site.announce.essentials')}
+          </span>
         </div>
-      </header>
-      <main className={styles.main}>{children}</main>
-      <footer className={styles.footer}>
-        <div className={styles.columns}>
-          <div className={styles.about}>
-            <p className={styles.footerBrand}>{store.name}</p>
-            <p className={styles.note}>{t('common.footer.note', { store: store.name })}</p>
-          </div>
-          <div className={styles.links}>
-            <h2 className={styles.heading}>{t('common.footer.shop')}</h2>
-            <Link href="/search/" className={styles.footerLink}>
-              {t('common.footer.all')}
-            </Link>
-            <Link href="/about/" className={styles.footerLink}>
-              {t('common.nav.about')}
-            </Link>
-            <Link href="/account/" className={styles.footerLink}>
-              {t('common.tools.account')}
-            </Link>
-          </div>
-          <div className={styles.links}>
-            <h2 className={styles.heading}>{t('common.footer.help')}</h2>
-            <Link href="/contact/" className={styles.footerLink}>
-              {t('common.nav.contact')}
-            </Link>
-            <Link href="/policies/shipping/" className={styles.footerLink}>
-              {t('common.footer.shipping')}
-            </Link>
-            <Link href="/policies/returns/" className={styles.footerLink}>
-              {t('common.footer.returns')}
-            </Link>
-            <Link href="/policies/privacy/" className={styles.footerLink}>
-              {t('common.footer.privacy')}
-            </Link>
-            <Link href="/policies/terms/" className={styles.footerLink}>
-              {t('common.footer.terms')}
-            </Link>
-          </div>
-        </div>
-        <div className={styles.base}>
-          <ConsentSettingsButton t={t} className={styles.cookies} />
-          <PoweredBy brand={poweredBy} t={t} className={styles.powered} />
-        </div>
-      </footer>
-      <ConsentBanner t={t} className={styles.consent} />
+      </div>
     </div>
+  )
+}
+
+export const Layout = ({ children, bare = false }: { children: ReactNode; bare?: boolean }) => {
+  const { t, mode } = useStorefront()
+  return (
+    <WishlistProvider>
+    <div className={base.root}>
+      {mode === 'live' ? null : <PreviewBanner t={t} className={layout.preview} />}
+      {bare ? null : <Announcement />}
+      {bare ? null : <Header />}
+      <main className="flex-1">{children}</main>
+      {bare ? null : <Footer />}
+      <WhatsAppButton />
+      <ConsentBanner t={t} className={layout.consent} />
+    </div>
+    </WishlistProvider>
   )
 }
