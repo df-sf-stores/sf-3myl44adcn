@@ -9,11 +9,18 @@ html,
 body {
   width: 100%;
   min-height: 100%;
+  margin: 0;
   padding: 0;
 }
 
+/* The back-to-top button's jump to #top glides, unless the shopper asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
-  margin: 0;
   background: var(--color-surface);
   color: var(--color-text);
   font-family: var(--font-body);
